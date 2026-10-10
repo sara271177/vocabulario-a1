@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Vocabulaire anglais A1</title>
+<title>Vocabulaire anglais A1–B2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
@@ -42,6 +42,14 @@ header h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp
 header p { margin: 0; color: var(--muted); max-width: 62ch; }
 .level { display: inline-block; font-family: var(--font-display); font-weight: 600; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; margin-bottom: 10px; }
 
+.levels { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.lv { font: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; padding: 8px 18px; min-width: 118px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--fg); text-align: left; }
+.lv b { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; line-height: 1.1; color: var(--accent); }
+.lv span { font-size: .8rem; color: var(--muted); }
+.lv[aria-selected="true"] { background: var(--accent); border-color: var(--accent); }
+.lv[aria-selected="true"] b, .lv[aria-selected="true"] span { color: var(--bg); }
+.lv:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#level-note { margin-top: 10px; font-size: .92rem; }
 .controls { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 14px 10px; margin-top: 18px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 #q { flex: 1 1 240px; min-width: 0; font: inherit; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg); }
@@ -83,9 +91,16 @@ section h2 small { font-family: var(--font-body); font-weight: 400; font-size: .
 
 <div class="wrap">
   <header>
-    <span class="level">Niveau A1 · CECRL</span>
-    <h1>Vocabulaire anglais A1</h1>
-    <p>Les mots essentiels du niveau débutant, classés par thème, avec la traduction en français et en espagnol. Clique sur le haut-parleur pour entendre la prononciation anglaise.</p>
+    <span class="level">CECRL · English · Français · Español</span>
+    <h1>Vocabulaire anglais</h1>
+    <p>Les mots essentiels des niveaux A1, A2, B1 et B2, classés par thème, avec la traduction en français et en espagnol. Clique sur le haut-parleur pour entendre la prononciation anglaise.</p>
+    <nav class="levels" role="tablist" aria-label="Niveau">
+      <button class="lv" role="tab" id="lv-A1" data-level="A1" aria-selected="true"><b>A1</b><span>Débutant</span></button>
+      <button class="lv" role="tab" id="lv-A2" data-level="A2" aria-selected="false"><b>A2</b><span>Élémentaire</span></button>
+      <button class="lv" role="tab" id="lv-B1" data-level="B1" aria-selected="false"><b>B1</b><span>Intermédiaire</span></button>
+      <button class="lv" role="tab" id="lv-B2" data-level="B2" aria-selected="false"><b>B2</b><span>Intermédiaire avancé</span></button>
+    </nav>
+    <p id="level-note"></p>
   </header>
 
   <div class="controls">
@@ -106,7 +121,8 @@ section h2 small { font-family: var(--font-body); font-weight: 400; font-size: .
 </div>
 
 <script>
-const RAW = `
+const LEVELS = {
+A1: `
 # Salutations et politesse
 hello|bonjour / salut|hola
 hi|salut|hola
@@ -745,30 +761,1020 @@ someone / somebody|quelqu'un|alguien
 nobody|personne|nadie
 more|plus|más
 less|moins|menos
-`;
+`,
+A2: `
+# Caractère et sentiments
+angry|en colère|enfadado
+afraid / scared|effrayé (to be afraid = avoir peur)|asustado (tener miedo)
+worried|inquiet|preocupado
+excited|enthousiaste / impatient|emocionado / ilusionado
+bored|qui s'ennuie|aburrido
+surprised|surpris|sorprendido
+nervous|nerveux|nervioso
+calm|calme|tranquilo
+friendly|aimable / sympathique|simpático / amable
+kind|gentil|amable
+funny|drôle|gracioso
+shy|timide|tímido
+lazy|paresseux|vago / perezoso
+clever / smart|intelligent / malin|listo / inteligente
+stupid|stupide|tonto / estúpido
+polite|poli|educado
+rude|impoli|maleducado
+honest|honnête|honesto / sincero
+proud|fier|orgulloso
+lonely|seul (qui se sent seul)|solo (sentirse solo)
+hard-working|travailleur|trabajador
+careful|prudent / soigneux|cuidadoso
+crazy|fou|loco
+quiet|calme / silencieux|tranquilo / callado
+noisy / loud|bruyant|ruidoso
+feeling|le sentiment|el sentimiento
+fear|la peur|el miedo
+# Santé
+health|la santé|la salud
+healthy|en bonne santé / sain|sano / saludable
+headache|le mal de tête|el dolor de cabeza
+toothache|le mal de dents|el dolor de muelas
+stomach ache|le mal de ventre|el dolor de estómago
+a cold|un rhume|un resfriado
+flu|la grippe|la gripe
+cough|la toux|la tos
+fever / temperature|la fièvre|la fiebre
+pain|la douleur|el dolor
+to hurt|faire mal|doler / hacer daño
+medicine|le médicament|la medicina / el medicamento
+pill|le comprimé|la pastilla
+dentist|le dentiste|el dentista
+appointment|le rendez-vous|la cita
+accident|l'accident|el accidente
+ambulance|l'ambulance|la ambulancia
+blood|le sang|la sangre
+to break (a leg)|se casser (la jambe)|romperse (la pierna)
+to rest|se reposer|descansar
+to get better|aller mieux / guérir|mejorar / ponerse mejor
+diet|le régime / l'alimentation|la dieta
+exercise|l'exercice|el ejercicio
+# Achats et argent
+shopping|les courses / le shopping|las compras
+customer|le client|el cliente
+shop assistant|le vendeur / la vendeuse|el dependiente / la dependienta
+cash|l'argent liquide / les espèces|el efectivo
+credit card|la carte bancaire|la tarjeta de crédito
+coin|la pièce (de monnaie)|la moneda
+change|la monnaie (rendue)|el cambio / la vuelta
+receipt|le ticket de caisse / le reçu|el recibo / el tique
+size|la taille|la talla / el tamaño
+discount|la réduction / la remise|el descuento
+sale(s)|les soldes|las rebajas
+queue / line|la file d'attente|la cola
+to cost|coûter|costar
+to spend|dépenser / passer (du temps)|gastar / pasar (tiempo)
+to try on|essayer (un vêtement)|probarse
+to borrow|emprunter|pedir prestado
+to lend|prêter|prestar
+to save|économiser / sauvegarder|ahorrar / guardar
+to earn|gagner (de l'argent)|ganar
+shopping centre / mall|le centre commercial|el centro comercial
+bookshop|la librairie|la librería
+butcher's|la boucherie|la carnicería
+bakery|la boulangerie|la panadería
+clothes shop|le magasin de vêtements|la tienda de ropa
+# Cuisine et restaurant
+recipe|la recette|la receta
+meal|le repas|la comida
+dish|le plat|el plato
+snack|l'en-cas / le goûter|el tentempié / la merienda
+dessert|le dessert|el postre
+starter|l'entrée|el entrante / el primer plato
+main course|le plat principal|el plato principal
+to order|commander|pedir
+tip|le pourboire|la propina
+bowl|le bol|el cuenco / el bol
+bottle|la bouteille|la botella
+can / tin|la canette / la boîte de conserve|la lata
+jar|le bocal / le pot|el tarro
+slice|la tranche|la rebanada / la loncha
+piece|le morceau|el trozo / la pieza
+oil|l'huile|el aceite
+pepper|le poivre / le poivron|la pimienta / el pimiento
+garlic|l'ail|el ajo
+mushroom|le champignon|el champiñón / la seta
+beans|les haricots|las judías / los frijoles
+peas|les petits pois|los guisantes
+grapes|le raisin|las uvas
+pear|la poire|la pera
+peach|la pêche|el melocotón
+beef|le bœuf|la carne de ternera
+pork|le porc|la carne de cerdo
+lamb|l'agneau|el cordero
+ham|le jambon|el jamón
+sausage|la saucisse|la salchicha
+biscuit / cookie|le biscuit|la galleta
+honey|le miel|la miel
+jam|la confiture|la mermelada
+yoghurt|le yaourt|el yogur
+flour|la farine|la harina
+fresh|frais|fresco
+delicious|délicieux|delicioso / rico
+sweet|sucré|dulce
+salty|salé|salado
+spicy|épicé|picante
+raw|cru|crudo
+to boil|faire bouillir|hervir
+to fry|faire frire|freír
+to bake|faire cuire au four|hornear
+to cut|couper|cortar
+to taste|goûter / avoir le goût de|probar / saber a
+# La maison
+furniture|les meubles|los muebles
+armchair|le fauteuil|el sillón
+cupboard|le placard|el armario
+wardrobe|l'armoire|el armario (ropero)
+shelf|l'étagère|la estantería / el estante
+mirror|le miroir|el espejo
+carpet / rug|le tapis / la moquette|la alfombra
+curtains|les rideaux|las cortinas
+pillow|l'oreiller|la almohada
+blanket|la couverture|la manta
+sink|l'évier / le lavabo|el fregadero / el lavabo
+bath|la baignoire / le bain|la bañera / el baño
+towel|la serviette|la toalla
+oven|le four|el horno
+cooker / stove|la cuisinière|la cocina (aparato)
+microwave|le micro-ondes|el microondas
+washing machine|la machine à laver|la lavadora
+dishwasher|le lave-vaisselle|el lavavajillas
+roof|le toit|el tejado
+ceiling|le plafond|el techo
+balcony|le balcon|el balcón
+garage|le garage|el garaje
+lift / elevator|l'ascenseur|el ascensor
+neighbour|le voisin / la voisine|el vecino / la vecina
+rent|le loyer|el alquiler
+to rent|louer|alquilar
+to move (house)|déménager|mudarse
+to tidy (up)|ranger|ordenar
+housework|les tâches ménagères|las tareas domésticas
+# Voyages
+journey|le trajet / le voyage|el viaje / el trayecto
+flight|le vol|el vuelo
+luggage|les bagages|el equipaje
+backpack|le sac à dos|la mochila
+tourist|le touriste|el turista
+guide|le guide|el guía
+abroad|à l'étranger|en el extranjero
+border|la frontière|la frontera
+single ticket|l'aller simple|el billete de ida
+return ticket|l'aller-retour|el billete de ida y vuelta
+timetable / schedule|l'horaire|el horario
+platform|le quai|el andén
+departure|le départ|la salida
+arrival|l'arrivée|la llegada
+delay|le retard|el retraso
+to book|réserver|reservar
+reservation|la réservation|la reserva
+to check in|s'enregistrer|facturar / registrarse
+to miss (the bus)|rater (le bus)|perder (el autobús)
+to get on / off|monter / descendre|subir(se) / bajar(se)
+to pack|faire ses bagages|hacer la maleta
+campsite|le camping|el camping
+tent|la tente|la tienda de campaña
+souvenir|le souvenir|el recuerdo
+sightseeing|la visite touristique|el turismo / hacer turismo
+traffic|la circulation|el tráfico
+traffic lights|les feux|el semáforo
+corner|le coin|la esquina
+crossroads|le carrefour|el cruce
+bridge|le pont|el puente
+petrol / gas|l'essence|la gasolina
+to park|se garer|aparcar
+# Le travail
+company|l'entreprise|la empresa
+factory|l'usine|la fábrica
+manager|le directeur / le responsable|el gerente / el director
+colleague|le / la collègue|el compañero de trabajo
+salary|le salaire|el sueldo / el salario
+career|la carrière|la carrera (profesional)
+job interview|l'entretien d'embauche|la entrevista de trabajo
+CV / résumé|le CV|el currículum
+experience|l'expérience|la experiencia
+part-time|à temps partiel|a tiempo parcial
+full-time|à temps plein|a tiempo completo
+unemployed|au chômage|en paro / desempleado
+to apply (for)|postuler|solicitar
+to hire|embaucher|contratar
+to retire|prendre sa retraite|jubilarse
+lawyer|l'avocat|el abogado
+journalist|le / la journaliste|el / la periodista
+farmer|l'agriculteur|el agricultor / el granjero
+mechanic|le mécanicien|el mecánico
+hairdresser|le coiffeur / la coiffeuse|el peluquero / la peluquera
+artist|l'artiste|el / la artista
+pilot|le pilote|el piloto
+scientist|le scientifique|el científico
+secretary|le / la secrétaire|el secretario / la secretaria
+# Technologie
+internet|internet|internet
+website|le site web|la página web
+laptop|l'ordinateur portable|el portátil
+mobile phone|le téléphone portable|el móvil
+screen|l'écran|la pantalla
+keyboard|le clavier|el teclado
+message|le message|el mensaje
+password|le mot de passe|la contraseña
+app|l'application|la aplicación
+file|le fichier|el archivo
+to download|télécharger|descargar
+to upload|mettre en ligne / téléverser|subir
+to send|envoyer|enviar / mandar
+to receive|recevoir|recibir
+to click|cliquer|hacer clic
+to switch on / off|allumer / éteindre|encender / apagar
+to charge|recharger|cargar
+battery|la batterie|la batería
+camera|l'appareil photo|la cámara
+online|en ligne|en línea
+social media|les réseaux sociaux|las redes sociales
+# Nature
+countryside|la campagne|el campo
+island|l'île|la isla
+hill|la colline|la colina
+desert|le désert|el desierto
+field|le champ|el campo (de cultivo)
+grass|l'herbe|la hierba
+plant|la plante|la planta
+leaf / leaves|la feuille / les feuilles|la hoja / las hojas
+stone|la pierre|la piedra
+coast|la côte|la costa
+wave|la vague|la ola
+moon|la lune|la luna
+star|l'étoile|la estrella
+planet|la planète|el planeta
+storm|la tempête / l'orage|la tormenta
+fog|le brouillard|la niebla
+ice|la glace|el hielo
+temperature|la température|la temperatura
+degree|le degré|el grado
+insect|l'insecte|el insecto
+bee|l'abeille|la abeja
+snake|le serpent|la serpiente
+duck|le canard|el pato
+bear|l'ours|el oso
+wolf|le loup|el lobo
+tiger|le tigre|el tigre
+pollution|la pollution|la contaminación
+# Loisirs et culture
+concert|le concert|el concierto
+theatre|le théâtre|el teatro
+exhibition|l'exposition|la exposición
+gallery|la galerie|la galería
+band|le groupe (de musique)|el grupo / la banda
+singer|le chanteur / la chanteuse|el / la cantante
+actor / actress|l'acteur / l'actrice|el actor / la actriz
+show|le spectacle / l'émission|el espectáculo / el programa
+news|les informations|las noticias
+newspaper|le journal|el periódico
+magazine|le magazine|la revista
+novel|le roman|la novela
+story|l'histoire|la historia / el cuento
+painting|la peinture / le tableau|la pintura / el cuadro
+drawing|le dessin|el dibujo
+team|l'équipe|el equipo
+match|le match|el partido
+player|le joueur|el jugador
+to win|gagner|ganar
+to score|marquer (un but)|marcar
+gym|la salle de sport|el gimnasio
+cycling|le cyclisme|el ciclismo
+skiing|le ski|el esquí
+fishing|la pêche|la pesca
+to relax|se détendre|relajarse
+to enjoy|apprécier / aimer|disfrutar
+free time|le temps libre|el tiempo libre
+# Verbes
+to become|devenir|hacerse / convertirse en
+to believe|croire|creer
+to break|casser|romper
+to build|construire|construir
+to carry|porter (transporter)|llevar / cargar
+to catch|attraper|coger / atrapar
+to change|changer|cambiar
+to choose|choisir|elegir
+to collect|collectionner / ramasser|coleccionar / recoger
+to compare|comparer|comparar
+to continue|continuer|continuar / seguir
+to cry|pleurer|llorar
+to decide|décider|decidir
+to describe|décrire|describir
+to die|mourir|morir
+to draw|dessiner|dibujar
+to dream|rêver|soñar
+to explain|expliquer|explicar
+to fall|tomber|caer(se)
+to fly|voler / prendre l'avion|volar
+to follow|suivre|seguir
+to grow|grandir / pousser / cultiver|crecer / cultivar
+to happen|arriver / se passer|pasar / ocurrir
+to hope|espérer|esperar (tener esperanza)
+to invite|inviter|invitar
+to join|rejoindre / s'inscrire|unirse / apuntarse
+to keep|garder|guardar / mantener
+to kill|tuer|matar
+to laugh|rire|reír(se)
+to look for|chercher|buscar
+to mean|signifier / vouloir dire|significar / querer decir
+to move|bouger / déplacer|mover(se)
+to plan|prévoir / planifier|planear / planificar
+to practise / practice|s'entraîner / pratiquer|practicar
+to prefer|préférer|preferir
+to prepare|préparer|preparar
+to promise|promettre|prometer
+to repeat|répéter|repetir
+to return|revenir / rendre|volver / devolver
+to shout|crier|gritar
+to show|montrer|mostrar / enseñar
+to smile|sourire|sonreír
+to smoke|fumer|fumar
+to steal|voler (dérober)|robar
+to throw|lancer / jeter|tirar / lanzar
+to turn|tourner|girar
+to agree|être d'accord|estar de acuerdo
+to worry|s'inquiéter|preocuparse
+# Adjectifs et adverbes
+dangerous|dangereux|peligroso
+safe|en sécurité / sûr|seguro
+famous|célèbre|famoso
+popular|populaire|popular
+modern|moderne|moderno
+traditional|traditionnel|tradicional
+comfortable|confortable|cómodo
+uncomfortable|inconfortable|incómodo
+heavy|lourd|pesado
+light|léger|ligero
+hard|dur / difficile|duro / difícil
+soft|doux / mou|suave / blando
+dry|sec|seco
+wet|mouillé|mojado
+dark|sombre|oscuro
+bright|lumineux / vif|brillante / luminoso
+strong|fort|fuerte
+weak|faible|débil
+wide|large|ancho
+narrow|étroit|estrecho
+deep|profond|profundo
+thin|mince / fin|delgado / fino
+fat|gros|gordo
+lucky|chanceux|afortunado (tener suerte)
+possible|possible|posible
+impossible|impossible|imposible
+necessary|nécessaire|necesario
+real|réel / vrai|real / verdadero
+perfect|parfait|perfecto
+terrible|terrible|terrible
+wonderful|merveilleux|maravilloso
+strange|étrange|extraño / raro
+already|déjà|ya
+still|encore / toujours|todavía / aún
+yet|encore (négation) / déjà (question)|todavía / ya
+just|juste / venir de|justo / acabar de
+almost|presque|casi
+quite|assez|bastante
+really|vraiment|realmente / de verdad
+suddenly|soudain|de repente
+together|ensemble|juntos
+alone|seul|solo
+everywhere|partout|en todas partes
+somewhere|quelque part|en algún sitio
+nowhere|nulle part|en ningún sitio
+maybe / perhaps|peut-être|quizás / tal vez
+enough|assez|suficiente / bastante
+especially|surtout|especialmente
+probably|probablement|probablemente
+finally|enfin / finalement|por fin / finalmente
+recently|récemment|recientemente
+# Connecteurs et prépositions
+although|bien que|aunque
+however|cependant|sin embargo
+if|si|si
+unless|à moins que|a menos que
+while|pendant que|mientras
+until|jusqu'à|hasta
+since|depuis / puisque|desde / ya que
+during|pendant|durante
+first of all|tout d'abord|en primer lugar
+at the end|à la fin|al final
+for example|par exemple|por ejemplo
+instead of|au lieu de|en lugar de
+as well|aussi|también
+through|à travers|a través de
+across|de l'autre côté de / à travers|al otro lado de / a través de
+along|le long de|a lo largo de
+opposite|en face de|enfrente de
+above|au-dessus de|encima de
+below|en dessous de|debajo de
+outside|dehors|fuera
+inside|dedans|dentro
+upstairs|en haut / à l'étage|arriba
+downstairs|en bas|abajo
+`,
+B1: `
+# Relations et émotions
+relationship|la relation|la relación
+partner|le / la partenaire|la pareja
+couple|le couple|la pareja
+wedding|le mariage (cérémonie)|la boda
+marriage|le mariage (union)|el matrimonio
+divorce|le divorce|el divorcio
+to fall in love|tomber amoureux|enamorarse
+to get married|se marier|casarse
+to get on (with)|bien s'entendre (avec)|llevarse bien (con)
+to argue|se disputer|discutir
+to apologise|s'excuser|pedir perdón / disculparse
+to forgive|pardonner|perdonar
+to trust|faire confiance|confiar
+to support|soutenir|apoyar
+to miss (someone)|manquer (quelqu'un me manque)|echar de menos
+to look after|s'occuper de|cuidar
+to grow up|grandir|crecer / criarse
+to bring up|élever (un enfant)|criar
+generation|la génération|la generación
+childhood|l'enfance|la infancia
+teenager|l'adolescent(e)|el / la adolescente
+adult|l'adulte|el adulto
+elderly|âgé|anciano / mayor
+confident|sûr de soi|seguro de sí mismo
+jealous|jaloux|celoso
+embarrassed|gêné|avergonzado
+disappointed|déçu|decepcionado
+relieved|soulagé|aliviado
+grateful|reconnaissant|agradecido
+upset|contrarié / bouleversé|disgustado / molesto
+annoyed|agacé|molesto / fastidiado
+frightened|effrayé|asustado
+anxious|anxieux|ansioso
+patient|patient|paciente
+generous|généreux|generoso
+selfish|égoïste|egoísta
+reliable|fiable|fiable / de confianza
+sensitive|sensible|sensible
+sensible|raisonnable (faux ami !)|sensato (¡falso amigo!)
+mood|l'humeur|el humor / el estado de ánimo
+# Études et travail
+degree|le diplôme (universitaire)|la licenciatura / el título
+course|le cours / la formation|el curso
+subject|la matière|la asignatura
+knowledge|la connaissance|el conocimiento
+skill|la compétence|la habilidad / la destreza
+research|la recherche|la investigación
+qualification|le diplôme / la qualification|la titulación
+training|la formation|la formación
+to graduate|obtenir son diplôme|graduarse
+to fail (an exam)|échouer / rater|suspender
+to pass (an exam)|réussir (un examen)|aprobar
+to revise|réviser|repasar
+employee|l'employé(e)|el empleado
+employer|l'employeur|el empleador
+staff|le personnel|el personal
+department|le service / le département|el departamento
+contract|le contrat|el contrato
+deadline|la date limite|la fecha límite / el plazo
+task|la tâche|la tarea
+project|le projet|el proyecto
+goal|le but / l'objectif|el objetivo / la meta
+responsibility|la responsabilité|la responsabilidad
+opportunity|l'occasion / l'opportunité|la oportunidad
+success|le succès / la réussite|el éxito
+failure|l'échec|el fracaso
+promotion|la promotion|el ascenso
+to manage|gérer / réussir à|gestionar / dirigir / lograr
+to organise|organiser|organizar
+to achieve|atteindre / accomplir|lograr / conseguir
+to deal with|s'occuper de / gérer|ocuparse de / tratar con
+to improve|améliorer|mejorar
+to develop|développer|desarrollar
+to provide|fournir|proporcionar
+to require|exiger / nécessiter|requerir / necesitar
+to attend|assister à (faux ami !)|asistir a
+to be in charge of|être responsable de|estar a cargo de
+# Argent et économie
+economy|l'économie|la economía
+budget|le budget|el presupuesto
+cost|le coût|el coste / el costo
+profit|le bénéfice|el beneficio / la ganancia
+loan|le prêt|el préstamo
+debt|la dette|la deuda
+bill|la facture|la factura
+tax|l'impôt / la taxe|el impuesto
+income|le revenu|los ingresos
+account|le compte|la cuenta
+cash machine / ATM|le distributeur|el cajero automático
+to afford|avoir les moyens de|permitirse
+to waste|gaspiller|malgastar / desperdiciar
+to owe|devoir (de l'argent)|deber
+to invest|investir|invertir
+to increase|augmenter|aumentar
+to reduce|réduire|reducir
+to charge|facturer / faire payer|cobrar
+worth|qui vaut|que vale
+value|la valeur|el valor
+wealthy|riche / aisé|adinerado / rico
+# Société et actualité
+society|la société|la sociedad
+government|le gouvernement|el gobierno
+politics|la politique|la política
+election|l'élection|las elecciones
+to vote|voter|votar
+law|la loi|la ley
+crime|le crime / la criminalité|el delito / el crimen
+criminal|le criminel|el delincuente
+thief|le voleur|el ladrón
+prison|la prison|la cárcel
+court|le tribunal|el tribunal
+war|la guerre|la guerra
+peace|la paix|la paz
+army|l'armée|el ejército
+right(s)|le droit / les droits|el derecho / los derechos
+freedom|la liberté|la libertad
+population|la population|la población
+poverty|la pauvreté|la pobreza
+problem|le problème|el problema
+solution|la solution|la solución
+situation|la situation|la situación
+event|l'événement|el acontecimiento / el evento
+culture|la culture|la cultura
+religion|la religion|la religión
+tradition|la tradition|la tradición
+community|la communauté|la comunidad
+citizen|le citoyen|el ciudadano
+foreigner|l'étranger / l'étrangère|el extranjero
+immigrant|l'immigré(e)|el / la inmigrante
+charity|l'association caritative|la organización benéfica
+volunteer|le / la bénévole|el voluntario
+# Environnement
+environment|l'environnement|el medio ambiente
+climate|le climat|el clima
+climate change|le changement climatique|el cambio climático
+global warming|le réchauffement climatique|el calentamiento global
+energy|l'énergie|la energía
+solar power|l'énergie solaire|la energía solar
+fuel|le carburant|el combustible
+rubbish / trash|les déchets / les ordures|la basura
+waste|le gaspillage / les déchets|los residuos / el desperdicio
+plastic|le plastique|el plástico
+to recycle|recycler|reciclar
+to protect|protéger|proteger
+to destroy|détruire|destruir
+to pollute|polluer|contaminar
+nature|la nature|la naturaleza
+wildlife|la faune|la fauna / la vida salvaje
+species|l'espèce|la especie
+endangered|menacé (d'extinction)|en peligro de extinción
+flood|l'inondation|la inundación
+drought|la sécheresse|la sequía
+earthquake|le tremblement de terre|el terremoto
+natural|naturel|natural
+# Médias et communication
+media|les médias|los medios de comunicación
+advertisement / advert|la publicité|el anuncio
+article|l'article|el artículo
+headline|le gros titre|el titular
+programme|l'émission|el programa
+channel|la chaîne|el canal / la cadena
+audience|le public|el público / la audiencia
+opinion|l'opinion|la opinión
+point of view|le point de vue|el punto de vista
+advice|le conseil (indénombrable)|el consejo
+information|les informations / le renseignement|la información
+conversation|la conversation|la conversación
+discussion|la discussion|la discusión / el debate
+argument|la dispute / l'argument|la discusión / el argumento
+to communicate|communiquer|comunicar(se)
+to discuss|discuter de|hablar de / discutir
+to mention|mentionner|mencionar
+to suggest|suggérer / proposer|sugerir / proponer
+to recommend|recommander|recomendar
+to persuade|persuader|persuadir / convencer
+to complain|se plaindre|quejarse
+to warn|avertir / prévenir|advertir / avisar
+to announce|annoncer|anunciar
+to deny|nier|negar
+to admit|admettre|admitir / reconocer
+to express|exprimer|expresar
+# Verbes
+to accept|accepter|aceptar
+to refuse|refuser|negarse / rechazar
+to avoid|éviter|evitar
+to allow|permettre / autoriser|permitir
+to prevent|empêcher|impedir / prevenir
+to cause|causer / provoquer|causar / provocar
+to affect|affecter|afectar
+to depend (on)|dépendre (de)|depender (de)
+to include|inclure|incluir
+to involve|impliquer|implicar / suponer
+to consider|considérer / envisager|considerar
+to realise|se rendre compte (faux ami !)|darse cuenta
+to recognise|reconnaître|reconocer
+to notice|remarquer|notar / darse cuenta
+to imagine|imaginer|imaginar
+to expect|s'attendre à|esperar (prever)
+to wonder|se demander|preguntarse
+to doubt|douter|dudar
+to guess|deviner|adivinar
+to solve|résoudre|resolver
+to succeed|réussir|tener éxito
+to fail|échouer|fracasar / fallar
+to reach|atteindre|alcanzar / llegar a
+to replace|remplacer|reemplazar / sustituir
+to share|partager|compartir
+to fix / to repair|réparer|arreglar / reparar
+to fill (in)|remplir|rellenar
+to hide|cacher|esconder
+to lie|mentir / être allongé|mentir / estar tumbado
+to pretend|faire semblant (faux ami !)|fingir
+to measure|mesurer|medir
+to mix|mélanger|mezclar
+to pull|tirer|tirar (de)
+to push|pousser|empujar
+to shake|secouer / trembler|sacudir / temblar
+to wish|souhaiter|desear
+to belong (to)|appartenir (à)|pertenecer (a)
+to exist|exister|existir
+to disappear|disparaître|desaparecer
+to get used to|s'habituer à|acostumbrarse a
+to give up|abandonner / arrêter|rendirse / dejar de
+to find out|découvrir / apprendre|averiguar / enterarse
+to set up|créer / installer|montar / establecer
+to turn up / down|monter / baisser (le son)|subir / bajar (el volumen)
+to carry on|continuer|continuar / seguir
+to run out of|être à court de|quedarse sin
+to look forward to|avoir hâte de|tener ganas de
+to put off|repousser / reporter|aplazar / posponer
+to take part (in)|participer (à)|participar (en)
+# Adjectifs
+available|disponible|disponible
+aware|conscient|consciente
+common|courant / commun|común
+rare|rare|raro / poco común
+complete|complet|completo
+complicated|compliqué|complicado
+simple|simple|sencillo / simple
+convenient|pratique / commode|conveniente / práctico
+efficient|efficace (rendement)|eficiente
+effective|efficace (qui marche)|eficaz
+essential|essentiel|esencial / imprescindible
+obvious|évident|obvio / evidente
+serious|sérieux / grave|serio / grave
+similar|semblable|parecido / similar
+huge|énorme|enorme
+tiny|minuscule|diminuto
+whole|entier|entero
+private|privé|privado
+public|public|público
+original|original|original
+typical|typique|típico
+unusual|inhabituel|poco común / inusual
+amazing|incroyable / génial|increíble / asombroso
+awful|affreux|horrible / fatal
+fair|juste / équitable|justo
+unfair|injuste|injusto
+silly|bête|tonto
+accurate|précis / exact|preciso / exacto
+appropriate|approprié|apropiado / adecuado
+negative|négatif|negativo
+positive|positif|positivo
+# Connecteurs et adverbes
+therefore|par conséquent|por lo tanto
+moreover / furthermore|de plus|además
+in addition|en outre|además
+on the other hand|d'un autre côté|por otro lado
+in my opinion|à mon avis|en mi opinión
+as a result|par conséquent|como resultado
+in order to|afin de|para / con el fin de
+despite|malgré|a pesar de
+even though|même si|aunque / a pesar de que
+whereas|alors que|mientras que
+as soon as|dès que|en cuanto
+as long as|tant que / du moment que|siempre que
+in case|au cas où|por si acaso
+otherwise|sinon|si no / de lo contrario
+eventually|finalement (faux ami !)|finalmente / al final
+actually|en fait (faux ami !)|en realidad
+apparently|apparemment|al parecer
+certainly|certainement|ciertamente / por supuesto
+definitely|sans aucun doute|sin duda
+fortunately|heureusement|afortunadamente
+unfortunately|malheureusement|desafortunadamente / por desgracia
+nearly|presque|casi
+hardly|à peine|apenas
+rather|plutôt|bastante / más bien
+anyway|de toute façon|de todos modos
+in fact|en fait|de hecho
+at least|au moins|al menos
+according to|selon|según
+# Expressions utiles
+It depends|Ça dépend|Depende
+I'm not sure|Je ne suis pas sûr(e)|No estoy seguro/a
+That's a good idea|C'est une bonne idée|Es una buena idea
+I agree / I disagree|Je suis d'accord / pas d'accord|Estoy de acuerdo / no estoy de acuerdo
+What do you mean?|Qu'est-ce que tu veux dire ?|¿Qué quieres decir?
+Never mind|Ce n'est pas grave|No importa / Déjalo
+It's up to you|C'est toi qui décides|Tú decides / Como quieras
+I can't stand…|Je ne supporte pas…|No soporto…
+I'm looking forward to it|J'ai hâte|Tengo muchas ganas
+What a pity!|Quel dommage !|¡Qué pena!
+Take care|Prends soin de toi|Cuídate
+Good luck!|Bonne chance !|¡Buena suerte!
+Congratulations!|Félicitations !|¡Enhorabuena! / ¡Felicidades!
+By the way|Au fait|Por cierto
+As far as I know|Pour autant que je sache|Que yo sepa
+It doesn't matter|Ça n'a pas d'importance|No importa
+I'd rather…|Je préférerais…|Preferiría…
+Would you mind…?|Ça vous dérangerait de… ?|¿Le importaría…?
+`,
+B2: `
+# Caractère et émotions
+ambitious|ambitieux|ambicioso
+arrogant|arrogant|arrogante
+cheerful|joyeux / gai|alegre
+reluctant|réticent|reacio
+stubborn|têtu|terco / testarudo
+thoughtful|attentionné / pensif|considerado / pensativo
+moody|lunatique|de humor cambiante / temperamental
+outgoing|extraverti / sociable|extrovertido / sociable
+easy-going|facile à vivre|tranquilo / de trato fácil
+determined|déterminé|decidido
+cautious|prudent|cauteloso / prudente
+curious|curieux|curioso
+furious|furieux|furioso
+thrilled|ravi|encantado / emocionado
+devastated|anéanti|destrozado / desolado
+overwhelmed|débordé / submergé|abrumado / agobiado
+frustrated|frustré|frustrado
+ashamed|honteux|avergonzado
+puzzled|perplexe|desconcertado
+exhausted|épuisé|agotado
+self-confidence|la confiance en soi|la confianza en uno mismo
+behaviour|le comportement|el comportamiento
+attitude|l'attitude|la actitud
+# Travail et entreprise
+workforce|la main-d'œuvre|la mano de obra / la plantilla
+recruitment|le recrutement|la contratación
+applicant / candidate|le candidat|el candidato / el solicitante
+shift|le service / le poste (horaires)|el turno
+overtime|les heures supplémentaires|las horas extra
+workload|la charge de travail|la carga de trabajo
+benefits|les avantages sociaux|las prestaciones / los beneficios
+resignation|la démission|la dimisión
+to resign|démissionner|dimitir
+to be fired / sacked|être licencié|ser despedido
+redundancy|le licenciement économique|el despido (por reducción de plantilla)
+negotiation|la négociation|la negociación
+to negotiate|négocier|negociar
+agreement / deal|l'accord|el acuerdo / el trato
+shareholder|l'actionnaire|el accionista
+competitor|le concurrent|el competidor
+market share|la part de marché|la cuota de mercado
+growth|la croissance|el crecimiento
+revenue|le chiffre d'affaires|los ingresos / la facturación
+supply|l'offre / l'approvisionnement|la oferta / el suministro
+demand|la demande|la demanda
+to launch|lancer (un produit)|lanzar
+to run (a business)|diriger (une entreprise)|dirigir / llevar (un negocio)
+to take over|reprendre / racheter|hacerse cargo de / adquirir
+to set up a business|créer une entreprise|montar un negocio
+strategy|la stratégie|la estrategia
+feedback|le retour / les commentaires|la opinión / los comentarios
+schedule|le planning / le calendrier|el calendario / la agenda
+# Société et politique
+policy|la politique (mesures)|la política (medidas)
+issue|le problème / la question|el problema / la cuestión
+debate|le débat|el debate
+campaign|la campagne|la campaña
+inequality|l'inégalité|la desigualdad
+discrimination|la discrimination|la discriminación
+unemployment|le chômage|el desempleo / el paro
+welfare|l'aide sociale / le bien-être|la asistencia social / el bienestar
+homeless|sans-abri|sin hogar / sin techo
+refugee|le réfugié|el refugiado
+protest|la manifestation|la protesta / la manifestación
+to protest|manifester / protester|protestar / manifestarse
+authority|l'autorité|la autoridad
+corruption|la corruption|la corrupción
+justice|la justice|la justicia
+evidence|les preuves (faux ami !)|las pruebas
+witness|le témoin|el testigo
+suspect|le suspect|el sospechoso
+to arrest|arrêter (police)|detener / arrestar
+to accuse|accuser|acusar
+guilty|coupable|culpable
+innocent|innocent|inocente
+sentence|la peine / la condamnation|la condena / la sentencia
+to ban|interdire|prohibir
+# Sciences et technologie
+science|la science|la ciencia
+scientific|scientifique|científico
+experiment|l'expérience (scientifique)|el experimento
+discovery|la découverte|el descubrimiento
+invention|l'invention|el invento
+device|l'appareil|el dispositivo / el aparato
+software|le logiciel|el software / el programa
+hardware|le matériel|el hardware
+data|les données|los datos
+artificial intelligence|l'intelligence artificielle|la inteligencia artificial
+network|le réseau|la red
+security|la sécurité|la seguridad
+privacy|la vie privée / la confidentialité|la privacidad
+to access|accéder|acceder
+to install|installer|instalar
+to update|mettre à jour|actualizar
+to store|stocker|almacenar
+to delete|supprimer|borrar / eliminar
+breakthrough|la percée / l'avancée|el avance / el gran descubrimiento
+to predict|prédire|predecir
+# Santé et bien-être
+symptom|le symptôme|el síntoma
+treatment|le traitement|el tratamiento
+injury|la blessure|la lesión / la herida
+wound|la plaie|la herida
+surgery|la chirurgie / l'opération|la cirugía / la operación
+prescription|l'ordonnance|la receta (médica)
+disease / illness|la maladie|la enfermedad
+infection|l'infection|la infección
+recovery|la guérison / le rétablissement|la recuperación
+to recover|se rétablir|recuperarse
+to suffer (from)|souffrir (de)|sufrir / padecer
+to prevent|prévenir / empêcher|prevenir
+stress|le stress|el estrés
+lifestyle|le mode de vie|el estilo de vida
+well-being|le bien-être|el bienestar
+mental health|la santé mentale|la salud mental
+addiction|l'addiction / la dépendance|la adicción
+# Verbes à particule (phrasal verbs)
+to bring about|provoquer / entraîner|provocar / ocasionar
+to come up with|trouver (une idée)|ocurrírsele / idear
+to figure out|comprendre / trouver|averiguar / entender
+to point out|faire remarquer / souligner|señalar
+to turn down|refuser (une offre)|rechazar
+to put up with|supporter / tolérer|aguantar / soportar
+to get over|se remettre de|superar / recuperarse de
+to make up|inventer / se réconcilier|inventar / hacer las paces
+to break down|tomber en panne / s'effondrer|averiarse / derrumbarse
+to break up|rompre (une relation)|romper / cortar (una relación)
+to call off|annuler|cancelar / suspender
+to cut down on|réduire (sa consommation)|reducir / consumir menos
+to go through|traverser / subir (une épreuve)|pasar por / atravesar
+to keep up with|suivre le rythme de|seguir el ritmo de
+to look into|examiner / étudier|investigar / estudiar
+to rely on|compter sur|contar con / depender de
+to stand out|se démarquer|destacar(se)
+to take up|commencer (une activité)|empezar / dedicarse a
+to work out|s'entraîner / résoudre|hacer ejercicio / resolver
+to sort out|régler / arranger|solucionar / arreglar
+# Verbes
+to acknowledge|reconnaître|reconocer
+to adapt|s'adapter|adaptarse
+to assume|supposer|suponer
+to claim|affirmer / réclamer|afirmar / reclamar
+to concentrate|se concentrer|concentrarse
+to convince|convaincre|convencer
+to criticise|critiquer|criticar
+to demand|exiger (faux ami !)|exigir
+to emphasise|souligner|enfatizar / destacar
+to encourage|encourager|animar / fomentar
+to ensure|garantir / s'assurer|asegurar / garantizar
+to estimate|estimer|estimar / calcular
+to evaluate|évaluer|evaluar
+to fulfil|réaliser / remplir|cumplir / realizar
+to identify|identifier|identificar
+to insist|insister|insistir
+to justify|justifier|justificar
+to maintain|maintenir / entretenir|mantener
+to overcome|surmonter|superar
+to point|indiquer / montrer du doigt|señalar
+to rely|dépendre|depender
+to reveal|révéler|revelar
+to seek|chercher|buscar
+to struggle|avoir du mal / lutter|luchar / tener dificultades
+to threaten|menacer|amenazar
+to undertake|entreprendre|emprender / llevar a cabo
+# Adjectifs
+reliable|fiable|fiable
+significant|important / significatif|significativo / importante
+relevant|pertinent|relevante / pertinente
+crucial|crucial|crucial
+considerable|considérable|considerable
+genuine|authentique / sincère|auténtico / sincero
+widespread|répandu|extendido / generalizado
+temporary|temporaire|temporal
+permanent|permanent|permanente
+fundamental|fondamental|fundamental
+controversial|controversé|polémico / controvertido
+outstanding|remarquable|excepcional / destacado
+remarkable|remarquable|notable
+reasonable|raisonnable|razonable
+inevitable|inévitable|inevitable
+vague|vague / flou|vago / impreciso
+straightforward|simple / direct|sencillo / directo
+tough|dur / difficile|duro / difícil
+worthwhile|qui en vaut la peine|que vale la pena
+challenging|stimulant / exigeant|desafiante / exigente
+# Connecteurs
+nevertheless|néanmoins|no obstante / sin embargo
+nonetheless|pourtant / quand même|aun así
+consequently|par conséquent|por consiguiente
+whereby|par lequel|por el cual
+thus|ainsi|así / por lo tanto
+hence|d'où|de ahí / por eso
+regardless of|indépendamment de|independientemente de
+in spite of|malgré|a pesar de
+provided that|à condition que|siempre que / con tal de que
+owing to / due to|en raison de|debido a
+as opposed to|par opposition à|en contraposición a
+on the whole|dans l'ensemble|en general
+to some extent|dans une certaine mesure|hasta cierto punto
+in terms of|en termes de|en cuanto a
+with regard to|en ce qui concerne|con respecto a
+whereas|tandis que|mientras que
+likewise|de même|asimismo / del mismo modo
+# Expressions idiomatiques
+a piece of cake|du gâteau (très facile)|pan comido
+to break the ice|briser la glace|romper el hielo
+to be on the same page|être sur la même longueur d'onde|estar en la misma onda
+to hit the nail on the head|mettre le doigt dessus|dar en el clavo
+to cost an arm and a leg|coûter les yeux de la tête|costar un ojo de la cara
+once in a blue moon|tous les trente-six du mois|de Pascuas a Ramos
+to call it a day|s'arrêter là (pour aujourd'hui)|dar por terminado el día
+to get the hang of it|prendre le coup de main|cogerle el truco
+under the weather|patraque|pachucho / indispuesto
+to keep an eye on|garder un œil sur|echar un ojo a / vigilar
+it's not my cup of tea|ce n'est pas mon truc|no es lo mío
+to make ends meet|joindre les deux bouts|llegar a fin de mes
+to be over the moon|être aux anges|estar en las nubes / muy feliz
+the last straw|la goutte d'eau qui fait déborder le vase|la gota que colma el vaso
+to beat around the bush|tourner autour du pot|andarse con rodeos
+# Faux amis
+actually|en fait (≠ actuellement = currently)|en realidad (≠ actualmente = currently)
+eventually|finalement (≠ éventuellement = possibly)|al final (≠ eventualmente = possibly)
+library|la bibliothèque (≠ librairie = bookshop)|la biblioteca (≠ librería = bookshop)
+sensible|raisonnable (≠ sensible = sensitive)|sensato (≠ sensible = sensitive)
+to attend|assister à (≠ attendre = to wait)|asistir a (≠ atender = to serve)
+to pretend|faire semblant (≠ prétendre = to claim)|fingir (≠ pretender = to aim)
+embarrassed|gêné (≠ embarrassé)|avergonzado (≠ embarazada = pregnant)
+large|grand (≠ large = wide)|grande (≠ largo = long)
+argument|la dispute (≠ argument = point)|la discusión (≠ argumento = plot)
+to realise|se rendre compte (≠ réaliser = to carry out)|darse cuenta (≠ realizar = to carry out)
+`
+};
 
-const cats = [];
-let cur = null;
-RAW.trim().split("\n").forEach(line => {
-  line = line.trim();
-  if (!line) return;
-  if (line.startsWith("#")) { cur = { name: line.slice(1).trim(), words: [] }; cats.push(cur); return; }
-  const [en, fr, es] = line.split("|");
-  cur.words.push({ en, fr, es });
-});
+function parse(raw) {
+  const list = [];
+  let cur = null;
+  raw.trim().split("\n").forEach(line => {
+    line = line.trim();
+    if (!line) return;
+    if (line.startsWith("#")) { cur = { name: line.slice(1).trim(), words: [] }; list.push(cur); return; }
+    const [en, fr, es] = line.split("|");
+    cur.words.push({ en, fr, es });
+  });
+  return list;
+}
+const DATA = {};
+Object.keys(LEVELS).forEach(k => { DATA[k] = parse(LEVELS[k]); });
+const NOTES = {
+  A1: "Débutant : se présenter, parler de sa famille, de sa maison et de la vie quotidienne.",
+  A2: "Élémentaire : faire des achats, voyager, parler de sa santé, de son travail et de ses loisirs. Ces mots s'ajoutent à ceux du niveau A1.",
+  B1: "Intermédiaire : donner son avis, parler de société, d'environnement et de ses projets. Attention aux faux amis signalés ! Ces mots s'ajoutent à ceux des niveaux A1 et A2.",
+  B2: "Intermédiaire avancé : argumenter, parler du monde du travail, de sciences et de société, avec des verbes à particule, des expressions idiomatiques et les faux amis les plus courants."
+};
 
-const total = cats.reduce((n, c) => n + c.words.length, 0);
+let level = "A1";
+let cats = DATA[level];
+let total = 0;
 const out = document.getElementById("out");
 const q = document.getElementById("q");
 const sel = document.getElementById("cat");
 const count = document.getElementById("count");
+const note = document.getElementById("level-note");
 const hidden = { en: false, fr: false, es: false };
 
-cats.forEach((c, i) => {
-  const o = document.createElement("option");
-  o.value = String(i); o.textContent = c.name + " (" + c.words.length + ")";
-  sel.appendChild(o);
-});
+function setLevel(l) {
+  level = l;
+  cats = DATA[l];
+  total = cats.reduce((n, c) => n + c.words.length, 0);
+  sel.length = 1;
+  cats.forEach((c, i) => {
+    const o = document.createElement("option");
+    o.value = String(i); o.textContent = c.name + " (" + c.words.length + ")";
+    sel.appendChild(o);
+  });
+  sel.value = "";
+  document.querySelectorAll(".lv").forEach(b => b.setAttribute("aria-selected", String(b.dataset.level === l)));
+  note.textContent = NOTES[l];
+  try { history.replaceState(null, "", "#" + l.toLowerCase()); } catch (err) {}
+  render();
+}
+document.querySelectorAll(".lv").forEach(b => b.addEventListener("click", () => setLevel(b.dataset.level)));
 
 const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 const esc = s => s.replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -822,7 +1828,8 @@ document.querySelectorAll(".toggle").forEach(btn => btn.addEventListener("click"
 }));
 q.addEventListener("input", render);
 sel.addEventListener("change", render);
-render();
+const start = (location.hash || "").slice(1).toUpperCase();
+setLevel(DATA[start] ? start : "A1");
 </script>
 </body>
 </html>
