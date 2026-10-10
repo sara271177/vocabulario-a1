@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Vocabulaire anglais A1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: a sticky control bar over a single reading column of trilingual word rows, grouped by theme like a phrasebook */
+:root {
+  --bg: #f6f8fa;
+  --surface: #ffffff;
+  --fg: #17212b;
+  --muted: #5d6b78;
+  --line: #dde3e9;
+  --accent: #1f5f8b;
+  --accent-soft: #e3eef6;
+  --en: #1f5f8b;
+  --fr: #2d6a4f;
+  --es: #a3471f;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11171d; --surface: #182029; --fg: #e6edf3; --muted: #93a2b0; --line: #2a3541;
+    --accent: #7db8e0; --accent-soft: #1d3346; --en: #7db8e0; --fr: #7fcca5; --es: #f0a07a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11171d; --surface: #182029; --fg: #e6edf3; --muted: #93a2b0; --line: #2a3541;
+  --accent: #7db8e0; --accent-soft: #1d3346; --en: #7db8e0; --fr: #7fcca5; --es: #f0a07a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.5; }
+.wrap { max-width: 920px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 64px; }
+header h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.1; margin: 0 0 6px; text-wrap: balance; }
+header p { margin: 0; color: var(--muted); max-width: 62ch; }
+.level { display: inline-block; font-family: var(--font-display); font-weight: 600; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); padding: 2px 10px; border-radius: 999px; margin-bottom: 10px; }
+
+.controls { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 14px 10px; margin-top: 18px; border-bottom: 1px solid var(--line); display: grid; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#q { flex: 1 1 240px; min-width: 0; font: inherit; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg); }
+#q:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#cat { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg); flex: 0 1 230px; min-width: 0; }
+.hide-label { font-size: .85rem; color: var(--muted); margin-right: 2px; }
+.toggle { font: inherit; font-size: .88rem; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 5px 12px; border-radius: 999px; }
+.toggle[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.count { margin-left: auto; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+section { margin-top: 30px; }
+section h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; margin: 0 0 10px; display: flex; align-items: baseline; gap: 10px; }
+section h2 small { font-family: var(--font-body); font-weight: 400; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.list { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.head, .w { display: grid; grid-template-columns: 1.15fr 1.1fr 1.1fr; gap: 12px; padding: 9px 14px; align-items: center; }
+.head { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--muted); border-bottom: 1px solid var(--line); }
+.w + .w { border-top: 1px solid var(--line); }
+.w > div { min-width: 0; overflow-wrap: anywhere; }
+.en { font-weight: 700; color: var(--en); display: flex; gap: 6px; align-items: center; }
+.fr { color: var(--fr); }
+.es { color: var(--es); }
+.lang-tag { display: none; font-size: .68rem; font-weight: 700; letter-spacing: .08em; color: var(--muted); margin-right: 6px; }
+.say { flex: none; border: 0; background: transparent; color: var(--muted); cursor: pointer; padding: 2px; border-radius: 6px; line-height: 0; }
+.say:hover { color: var(--accent); }
+.hidden-col .cell-text { filter: blur(6px); cursor: pointer; user-select: none; }
+.cell-text.shown { filter: none !important; }
+.empty { margin-top: 40px; color: var(--muted); text-align: center; }
+
+@media (max-width: 560px) {
+  .head { display: none; }
+  .w { grid-template-columns: 1fr; gap: 2px; }
+  .lang-tag { display: inline; }
+  .count { margin-left: 0; }
+}
+@media (prefers-reduced-motion: no-preference) { .cell-text { transition: filter .2s; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="level">Niveau A1 · CECRL</span>
+    <h1>Vocabulaire anglais A1</h1>
+    <p>Les mots essentiels du niveau débutant, classés par thème, avec la traduction en français et en espagnol. Clique sur le haut-parleur pour entendre la prononciation anglaise.</p>
+  </header>
+
+  <div class="controls">
+    <div class="row">
+      <input id="q" type="search" placeholder="Chercher un mot (anglais, français ou espagnol)…" aria-label="Chercher un mot">
+      <select id="cat" aria-label="Thème"><option value="">Tous les thèmes</option></select>
+    </div>
+    <div class="row">
+      <span class="hide-label">Mode révision, masquer :</span>
+      <button class="toggle" id="t-en" data-col="en" aria-pressed="false">Anglais</button>
+      <button class="toggle" id="t-fr" data-col="fr" aria-pressed="false">Français</button>
+      <button class="toggle" id="t-es" data-col="es" aria-pressed="false">Espagnol</button>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <main id="out"></main>
+</div>
+
+<script>
+const RAW = `
+# Salutations et politesse
+hello|bonjour / salut|hola
+hi|salut|hola
+goodbye|au revoir|adiós
+bye|salut / au revoir|adiós / chao
+good morning|bonjour (le matin)|buenos días
+good afternoon|bonjour (l'après-midi)|buenas tardes
+good evening|bonsoir|buenas tardes / buenas noches
+good night|bonne nuit|buenas noches
+please|s'il te plaît / s'il vous plaît|por favor
+thank you / thanks|merci|gracias
+you're welcome|de rien|de nada
+sorry|pardon / désolé(e)|perdón / lo siento
+excuse me|excusez-moi|disculpe / perdone
+yes|oui|sí
+no|non|no
+OK|d'accord|vale / de acuerdo
+How are you?|Comment ça va ?|¿Cómo estás?
+I'm fine, thank you|Je vais bien, merci|Estoy bien, gracias
+What's your name?|Comment tu t'appelles ?|¿Cómo te llamas?
+My name is…|Je m'appelle…|Me llamo…
+Where are you from?|D'où viens-tu ?|¿De dónde eres?
+I'm from France|Je viens de France|Soy de Francia
+How old are you?|Quel âge as-tu ?|¿Cuántos años tienes?
+I'm 30 (years old)|J'ai 30 ans|Tengo 30 años
+Nice to meet you|Enchanté(e)|Encantado/a
+See you later|À plus tard|Hasta luego
+See you tomorrow|À demain|Hasta mañana
+Welcome|Bienvenue|Bienvenido/a
+I don't understand|Je ne comprends pas|No entiendo
+Can you repeat, please?|Pouvez-vous répéter, s'il vous plaît ?|¿Puede repetir, por favor?
+Mr|Monsieur|señor
+Mrs / Ms|Madame|señora
+# Pronoms et déterminants
+I|je|yo
+you|tu / vous|tú / usted / vosotros
+he|il|él
+she|elle|ella
+it|il / elle (objet, animal)|(se omite) / ello
+we|nous|nosotros / nosotras
+they|ils / elles|ellos / ellas
+me|me / moi|me / mí
+him|le / lui|lo / le / él
+her (complément)|la / lui / elle|la / le / ella
+us|nous|nos / nosotros
+them|les / leur / eux|los / las / les / ellos
+my|mon / ma / mes|mi / mis
+your|ton / ta / tes / votre / vos|tu / tus / su / sus
+his|son / sa / ses (à lui)|su / sus (de él)
+her (possessif)|son / sa / ses (à elle)|su / sus (de ella)
+its|son / sa / ses (chose)|su / sus
+our|notre / nos|nuestro / nuestra
+their|leur / leurs|su / sus (de ellos)
+a / an|un / une|un / una
+the|le / la / les|el / la / los / las
+some|du / de la / des / quelques|algunos / unos / algo de
+any|du / des / aucun (négation, question)|algún / ningún
+this|ce / cette / ceci|este / esta / esto
+that|ce / cette / cela / ça|ese / esa / eso
+these|ces (-ci)|estos / estas
+those|ces (-là)|esos / esas
+there is / there are|il y a|hay
+# Nombres
+zero|zéro|cero
+one|un|uno
+two|deux|dos
+three|trois|tres
+four|quatre|cuatro
+five|cinq|cinco
+six|six|seis
+seven|sept|siete
+eight|huit|ocho
+nine|neuf|nueve
+ten|dix|diez
+eleven|onze|once
+twelve|douze|doce
+thirteen|treize|trece
+fourteen|quatorze|catorce
+fifteen|quinze|quince
+sixteen|seize|dieciséis
+seventeen|dix-sept|diecisiete
+eighteen|dix-huit|dieciocho
+nineteen|dix-neuf|diecinueve
+twenty|vingt|veinte
+twenty-one|vingt et un|veintiuno
+thirty|trente|treinta
+forty|quarante|cuarenta
+fifty|cinquante|cincuenta
+sixty|soixante|sesenta
+seventy|soixante-dix|setenta
+eighty|quatre-vingts|ochenta
+ninety|quatre-vingt-dix|noventa
+one hundred|cent|cien
+one thousand|mille|mil
+one million|un million|un millón
+first|premier / première|primero/a
+second|deuxième|segundo/a
+third|troisième|tercero/a
+last|dernier / dernière|último/a
+number|le nombre / le numéro|el número
+# Jours, mois et temps
+Monday|lundi|lunes
+Tuesday|mardi|martes
+Wednesday|mercredi|miércoles
+Thursday|jeudi|jueves
+Friday|vendredi|viernes
+Saturday|samedi|sábado
+Sunday|dimanche|domingo
+January|janvier|enero
+February|février|febrero
+March|mars|marzo
+April|avril|abril
+May|mai|mayo
+June|juin|junio
+July|juillet|julio
+August|août|agosto
+September|septembre|septiembre
+October|octobre|octubre
+November|novembre|noviembre
+December|décembre|diciembre
+spring|le printemps|la primavera
+summer|l'été|el verano
+autumn / fall|l'automne|el otoño
+winter|l'hiver|el invierno
+day|le jour / la journée|el día
+week|la semaine|la semana
+weekend|le week-end|el fin de semana
+month|le mois|el mes
+year|l'année / l'an|el año
+today|aujourd'hui|hoy
+tomorrow|demain|mañana
+yesterday|hier|ayer
+morning|le matin|la mañana
+afternoon|l'après-midi|la tarde
+evening|le soir|la tarde / la noche
+night|la nuit|la noche
+hour|l'heure|la hora
+minute|la minute|el minuto
+second (time)|la seconde|el segundo
+time|le temps / l'heure|el tiempo / la hora
+What time is it?|Quelle heure est-il ?|¿Qué hora es?
+It's three o'clock|Il est trois heures|Son las tres
+half past|et demie|y media
+quarter past / to|et quart / moins le quart|y cuarto / menos cuarto
+now|maintenant|ahora
+later|plus tard|más tarde
+soon|bientôt|pronto
+early|tôt|temprano
+late|tard / en retard|tarde
+birthday|l'anniversaire|el cumpleaños
+date|la date|la fecha
+# Couleurs
+colour / color|la couleur|el color
+red|rouge|rojo
+blue|bleu|azul
+green|vert|verde
+yellow|jaune|amarillo
+black|noir|negro
+white|blanc|blanco
+grey / gray|gris|gris
+orange|orange|naranja
+pink|rose|rosa
+purple|violet|morado
+brown|marron|marrón
+light (blue)|(bleu) clair|(azul) claro
+dark (blue)|(bleu) foncé|(azul) oscuro
+# Famille et personnes
+family|la famille|la familia
+mother / mum|la mère / maman|la madre / mamá
+father / dad|le père / papa|el padre / papá
+parents|les parents|los padres
+brother|le frère|el hermano
+sister|la sœur|la hermana
+son|le fils|el hijo
+daughter|la fille|la hija
+child / children|l'enfant / les enfants|el niño / los niños
+baby|le bébé|el bebé
+grandmother|la grand-mère|la abuela
+grandfather|le grand-père|el abuelo
+grandparents|les grands-parents|los abuelos
+uncle|l'oncle|el tío
+aunt|la tante|la tía
+cousin|le cousin / la cousine|el primo / la prima
+husband|le mari|el marido
+wife|la femme (épouse)|la mujer / la esposa
+boyfriend|le petit ami|el novio
+girlfriend|la petite amie|la novia
+friend|l'ami / l'amie|el amigo / la amiga
+man / men|l'homme / les hommes|el hombre / los hombres
+woman / women|la femme / les femmes|la mujer / las mujeres
+boy|le garçon|el chico / el niño
+girl|la fille|la chica / la niña
+person / people|la personne / les gens|la persona / la gente
+name|le nom / le prénom|el nombre
+surname|le nom de famille|el apellido
+age|l'âge|la edad
+married|marié(e)|casado/a
+single|célibataire|soltero/a
+# Le corps
+body|le corps|el cuerpo
+head|la tête|la cabeza
+hair|les cheveux|el pelo
+face|le visage|la cara
+eye / eyes|l'œil / les yeux|el ojo / los ojos
+ear|l'oreille|la oreja
+nose|le nez|la nariz
+mouth|la bouche|la boca
+tooth / teeth|la dent / les dents|el diente / los dientes
+neck|le cou|el cuello
+shoulder|l'épaule|el hombro
+arm|le bras|el brazo
+hand|la main|la mano
+finger|le doigt|el dedo
+leg|la jambe|la pierna
+foot / feet|le pied / les pieds|el pie / los pies
+back|le dos|la espalda
+stomach|le ventre / l'estomac|el estómago / la barriga
+heart|le cœur|el corazón
+# Vêtements
+clothes|les vêtements|la ropa
+shirt|la chemise|la camisa
+T-shirt|le tee-shirt|la camiseta
+trousers / pants|le pantalon|los pantalones
+jeans|le jean|los vaqueros
+dress|la robe|el vestido
+skirt|la jupe|la falda
+coat|le manteau|el abrigo
+jacket|la veste / le blouson|la chaqueta
+jumper / sweater|le pull|el jersey / el suéter
+shoes|les chaussures|los zapatos
+trainers / sneakers|les baskets|las zapatillas
+socks|les chaussettes|los calcetines
+hat|le chapeau|el sombrero
+cap|la casquette|la gorra
+scarf|l'écharpe|la bufanda
+bag|le sac|el bolso / la bolsa
+glasses|les lunettes|las gafas
+watch|la montre|el reloj
+# Nourriture et boissons
+food|la nourriture|la comida
+drink|la boisson|la bebida
+water|l'eau|el agua
+milk|le lait|la leche
+coffee|le café|el café
+tea|le thé|el té
+juice|le jus|el zumo / el jugo
+beer|la bière|la cerveza
+wine|le vin|el vino
+bread|le pain|el pan
+butter|le beurre|la mantequilla
+cheese|le fromage|el queso
+egg|l'œuf|el huevo
+meat|la viande|la carne
+chicken|le poulet|el pollo
+fish|le poisson|el pescado
+rice|le riz|el arroz
+pasta|les pâtes|la pasta
+soup|la soupe|la sopa
+salad|la salade|la ensalada
+vegetables|les légumes|las verduras
+potato|la pomme de terre|la patata / la papa
+chips / fries|les frites|las patatas fritas
+tomato|la tomate|el tomate
+carrot|la carotte|la zanahoria
+onion|l'oignon|la cebolla
+fruit|le fruit / les fruits|la fruta
+apple|la pomme|la manzana
+banana|la banane|el plátano
+orange (fruit)|l'orange|la naranja
+lemon|le citron|el limón
+strawberry|la fraise|la fresa
+sugar|le sucre|el azúcar
+salt|le sel|la sal
+cake|le gâteau|el pastel / la tarta
+chocolate|le chocolat|el chocolate
+ice cream|la glace|el helado
+sandwich|le sandwich|el bocadillo / el sándwich
+breakfast|le petit-déjeuner|el desayuno
+lunch|le déjeuner|la comida / el almuerzo
+dinner|le dîner|la cena
+menu|la carte / le menu|la carta / el menú
+the bill|l'addition|la cuenta
+# La maison
+house|la maison|la casa
+flat / apartment|l'appartement|el piso / el apartamento
+home|le chez-soi / la maison|el hogar / la casa
+room|la pièce / la chambre|la habitación
+kitchen|la cuisine|la cocina
+bedroom|la chambre|el dormitorio
+bathroom|la salle de bain|el cuarto de baño
+living room|le salon|el salón
+toilet|les toilettes|el baño / el váter
+garden|le jardin|el jardín
+door|la porte|la puerta
+window|la fenêtre|la ventana
+floor|le sol / l'étage|el suelo / la planta
+wall|le mur|la pared
+stairs|l'escalier|las escaleras
+table|la table|la mesa
+chair|la chaise|la silla
+bed|le lit|la cama
+sofa|le canapé|el sofá
+television / TV|la télévision / la télé|la televisión / la tele
+lamp|la lampe|la lámpara
+fridge|le frigo / le réfrigérateur|la nevera / el frigorífico
+shower|la douche|la ducha
+key|la clé|la llave
+phone|le téléphone|el teléfono
+computer|l'ordinateur|el ordenador / la computadora
+book|le livre|el libro
+cup|la tasse|la taza
+glass|le verre|el vaso
+plate|l'assiette|el plato
+knife|le couteau|el cuchillo
+fork|la fourchette|el tenedor
+spoon|la cuillère|la cuchara
+# La ville et les lieux
+city|la ville (grande)|la ciudad
+town|la ville (petite)|el pueblo / la ciudad
+village|le village|el pueblo / la aldea
+country|le pays|el país
+street|la rue|la calle
+road|la route|la carretera
+shop / store|le magasin|la tienda
+supermarket|le supermarché|el supermercado
+market|le marché|el mercado
+bank|la banque|el banco
+hospital|l'hôpital|el hospital
+pharmacy / chemist's|la pharmacie|la farmacia
+school|l'école|la escuela / el colegio
+university|l'université|la universidad
+office|le bureau|la oficina
+restaurant|le restaurant|el restaurante
+café|le café (lieu)|la cafetería
+hotel|l'hôtel|el hotel
+station|la gare|la estación
+airport|l'aéroport|el aeropuerto
+park|le parc|el parque
+beach|la plage|la playa
+museum|le musée|el museo
+cinema|le cinéma|el cine
+library|la bibliothèque|la biblioteca
+church|l'église|la iglesia
+post office|la poste|la oficina de correos
+map|le plan / la carte|el mapa
+left|gauche|izquierda
+right|droite|derecha
+straight on|tout droit|todo recto
+near|près|cerca
+far|loin|lejos
+# Transports et voyages
+car|la voiture|el coche / el carro
+bus|le bus|el autobús
+train|le train|el tren
+plane|l'avion|el avión
+bike / bicycle|le vélo|la bicicleta
+motorbike|la moto|la moto
+boat|le bateau|el barco
+taxi|le taxi|el taxi
+underground / subway|le métro|el metro
+on foot|à pied|a pie
+ticket|le billet / le ticket|el billete / el boleto
+passport|le passeport|el pasaporte
+suitcase|la valise|la maleta
+holiday / vacation|les vacances|las vacaciones
+trip|le voyage|el viaje
+# École et travail
+student|l'élève / l'étudiant(e)|el alumno / el estudiante
+teacher|le professeur|el profesor / la profesora
+class|la classe / le cours|la clase
+lesson|la leçon|la lección
+pen|le stylo|el bolígrafo
+pencil|le crayon|el lápiz
+paper|le papier|el papel
+notebook|le cahier|el cuaderno
+homework|les devoirs|los deberes
+exam|l'examen|el examen
+question|la question|la pregunta
+answer|la réponse|la respuesta
+word|le mot|la palabra
+sentence|la phrase|la frase
+language|la langue|el idioma / la lengua
+English|l'anglais / anglais(e)|el inglés / inglés(a)
+French|le français / français(e)|el francés / francés(a)
+Spanish|l'espagnol / espagnol(e)|el español / español(a)
+job|le travail / l'emploi|el trabajo / el empleo
+work|le travail|el trabajo
+doctor|le médecin|el médico / la médica
+nurse|l'infirmier / l'infirmière|el enfermero / la enfermera
+police officer|le policier|el policía
+waiter / waitress|le serveur / la serveuse|el camarero / la camarera
+cook|le cuisinier|el cocinero
+engineer|l'ingénieur|el ingeniero
+boss|le patron / le chef|el jefe / la jefa
+money|l'argent|el dinero
+price|le prix|el precio
+meeting|la réunion|la reunión
+email|l'e-mail / le courriel|el correo electrónico
+# Animaux
+animal|l'animal|el animal
+dog|le chien|el perro
+cat|le chat|el gato
+bird|l'oiseau|el pájaro
+fish (animal)|le poisson|el pez
+horse|le cheval|el caballo
+cow|la vache|la vaca
+pig|le cochon|el cerdo
+sheep|le mouton|la oveja
+hen|la poule|la gallina
+mouse|la souris|el ratón
+rabbit|le lapin|el conejo
+lion|le lion|el león
+elephant|l'éléphant|el elefante
+monkey|le singe|el mono
+# Météo et nature
+weather|le temps (météo)|el tiempo
+sun|le soleil|el sol
+sunny|ensoleillé|soleado
+rain|la pluie|la lluvia
+It's raining|Il pleut|Está lloviendo
+snow|la neige|la nieve
+It's snowing|Il neige|Está nevando
+wind|le vent|el viento
+windy|venteux|ventoso / hace viento
+cloud|le nuage|la nube
+cloudy|nuageux|nublado
+sky|le ciel|el cielo
+sea|la mer|el mar
+river|la rivière / le fleuve|el río
+lake|le lac|el lago
+mountain|la montagne|la montaña
+forest|la forêt|el bosque
+tree|l'arbre|el árbol
+flower|la fleur|la flor
+# Loisirs
+hobby|le loisir / le passe-temps|el pasatiempo / la afición
+sport|le sport|el deporte
+football / soccer|le football|el fútbol
+tennis|le tennis|el tenis
+swimming|la natation|la natación
+music|la musique|la música
+song|la chanson|la canción
+film / movie|le film|la película
+game|le jeu|el juego
+video game|le jeu vidéo|el videojuego
+party|la fête|la fiesta
+photo|la photo|la foto
+guitar|la guitare|la guitarra
+piano|le piano|el piano
+# Verbes
+to be|être|ser / estar
+to have|avoir|tener / haber
+to do|faire|hacer
+to make|faire / fabriquer|hacer
+to go|aller|ir
+to come|venir|venir
+to get|obtenir / recevoir|conseguir / recibir
+to like|aimer bien|gustar
+to love|aimer / adorer|encantar / amar
+to hate|détester|odiar
+to want|vouloir|querer
+to need|avoir besoin de|necesitar
+can|pouvoir / savoir (faire)|poder / saber
+to know|savoir / connaître|saber / conocer
+to think|penser|pensar
+to see|voir|ver
+to look (at)|regarder|mirar
+to watch|regarder (télé, film)|ver / mirar
+to listen (to)|écouter|escuchar
+to hear|entendre|oír
+to speak|parler (une langue)|hablar
+to talk|parler / discuter|hablar / charlar
+to say|dire|decir
+to tell|dire / raconter|decir / contar
+to ask|demander|preguntar / pedir
+to answer|répondre|responder / contestar
+to read|lire|leer
+to write|écrire|escribir
+to eat|manger|comer
+to drink|boire|beber
+to sleep|dormir|dormir
+to wake up|se réveiller|despertarse
+to get up|se lever|levantarse
+to work|travailler|trabajar
+to study|étudier|estudiar
+to learn|apprendre|aprender
+to teach|enseigner|enseñar
+to play|jouer|jugar / tocar (instrumento)
+to live|vivre / habiter|vivir
+to open|ouvrir|abrir
+to close|fermer|cerrar
+to buy|acheter|comprar
+to sell|vendre|vender
+to pay|payer|pagar
+to give|donner|dar
+to take|prendre|tomar / coger
+to bring|apporter|traer
+to put|mettre|poner
+to sit (down)|s'asseoir|sentarse
+to stand (up)|se lever / être debout|levantarse / estar de pie
+to walk|marcher|caminar / andar
+to run|courir|correr
+to swim|nager|nadar
+to drive|conduire|conducir / manejar
+to travel|voyager|viajar
+to cook|cuisiner|cocinar
+to wash|laver|lavar
+to clean|nettoyer|limpiar
+to help|aider|ayudar
+to start / to begin|commencer|empezar / comenzar
+to finish|finir|terminar
+to stop|arrêter|parar
+to wait (for)|attendre|esperar
+to understand|comprendre|entender / comprender
+to remember|se souvenir|recordar
+to forget|oublier|olvidar
+to call|appeler|llamar
+to meet|rencontrer / retrouver|conocer / quedar con
+to visit|visiter / rendre visite|visitar
+to stay|rester|quedarse
+to leave|partir / quitter|irse / salir / dejar
+to arrive|arriver|llegar
+to use|utiliser|usar / utilizar
+to try|essayer|intentar / probar
+to find|trouver|encontrar
+to lose|perdre|perder
+to wear|porter (vêtement)|llevar (puesto)
+to sing|chanter|cantar
+to dance|danser|bailar
+to feel|se sentir / sentir|sentir / sentirse
+# Adjectifs
+big|grand / gros|grande
+small / little|petit|pequeño
+tall|grand (taille)|alto
+short|petit / court|bajo / corto
+long|long|largo
+good|bon / bien|bueno
+bad|mauvais|malo
+new|nouveau / neuf|nuevo
+old|vieux / ancien|viejo / antiguo
+young|jeune|joven
+happy|heureux / content|feliz / contento
+sad|triste|triste
+tired|fatigué|cansado
+hungry|qui a faim (to be hungry = avoir faim)|hambriento (tener hambre)
+thirsty|qui a soif (to be thirsty = avoir soif)|sediento (tener sed)
+hot|chaud|caliente / caluroso
+cold|froid|frío
+warm|tiède / doux|templado / cálido
+nice|gentil / agréable|simpático / agradable
+beautiful|beau / belle|bonito / hermoso
+pretty|joli(e)|bonito / guapa
+ugly|laid / moche|feo
+easy|facile|fácil
+difficult|difficile|difícil
+cheap|bon marché / pas cher|barato
+expensive|cher|caro
+fast / quick|rapide|rápido
+slow|lent|lento
+rich|riche|rico
+poor|pauvre|pobre
+clean|propre|limpio
+dirty|sale|sucio
+full|plein|lleno
+empty|vide|vacío
+open|ouvert|abierto
+closed|fermé|cerrado
+right / correct|juste / correct|correcto
+wrong|faux|equivocado / incorrecto
+busy|occupé|ocupado
+free|libre / gratuit|libre / gratis
+interesting|intéressant|interesante
+boring|ennuyeux|aburrido
+important|important|importante
+ready|prêt|listo
+ill / sick|malade|enfermo
+favourite / favorite|préféré|favorito
+same|même|mismo
+different|différent|diferente
+# Mots interrogatifs
+what|quoi / que / quel|qué
+who|qui|quién
+where|où|dónde
+when|quand|cuándo
+why|pourquoi|por qué
+because|parce que|porque
+how|comment|cómo
+how many|combien (dénombrable)|cuántos / cuántas
+how much|combien (indénombrable, prix)|cuánto
+which|quel / lequel|cuál
+whose|à qui|de quién
+# Petits mots utiles
+and|et|y
+or|ou|o
+but|mais|pero
+so|donc / alors|así que / entonces
+with|avec|con
+without|sans|sin
+in|dans / en|en / dentro de
+on|sur|en / sobre
+under|sous|debajo de
+next to|à côté de|al lado de
+between|entre|entre
+behind|derrière|detrás de
+in front of|devant|delante de
+at|à|en / a
+to|à / vers|a / hacia
+from|de / depuis|de / desde
+for|pour|para / por
+of|de|de
+about|à propos de / environ|sobre / acerca de
+before|avant|antes
+after|après|después
+then|ensuite / puis|luego / después
+very|très|muy
+too|trop / aussi|demasiado / también
+also|aussi|también
+not|ne… pas|no
+always|toujours|siempre
+usually|d'habitude|normalmente
+often|souvent|a menudo
+sometimes|parfois|a veces
+never|jamais|nunca
+here|ici|aquí
+there|là / là-bas|allí / ahí
+again|encore / de nouveau|otra vez
+only|seulement|solo / solamente
+a lot (of)|beaucoup (de)|mucho
+a little|un peu|un poco
+all|tout / tous|todo / todos
+every|chaque|cada
+everything|tout|todo
+nothing|rien|nada
+something|quelque chose|algo
+someone / somebody|quelqu'un|alguien
+nobody|personne|nadie
+more|plus|más
+less|moins|menos
+`;
+
+const cats = [];
+let cur = null;
+RAW.trim().split("\n").forEach(line => {
+  line = line.trim();
+  if (!line) return;
+  if (line.startsWith("#")) { cur = { name: line.slice(1).trim(), words: [] }; cats.push(cur); return; }
+  const [en, fr, es] = line.split("|");
+  cur.words.push({ en, fr, es });
+});
+
+const total = cats.reduce((n, c) => n + c.words.length, 0);
+const out = document.getElementById("out");
+const q = document.getElementById("q");
+const sel = document.getElementById("cat");
+const count = document.getElementById("count");
+const hidden = { en: false, fr: false, es: false };
+
+cats.forEach((c, i) => {
+  const o = document.createElement("option");
+  o.value = String(i); o.textContent = c.name + " (" + c.words.length + ")";
+  sel.appendChild(o);
+});
+
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const esc = s => s.replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const speaker = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+
+function render() {
+  const term = norm(q.value.trim());
+  const only = sel.value;
+  let shown = 0;
+  let html = "";
+  cats.forEach((c, i) => {
+    if (only !== "" && String(i) !== only) return;
+    const words = term ? c.words.filter(w => norm(w.en + " " + w.fr + " " + w.es).includes(term)) : c.words;
+    if (!words.length) return;
+    shown += words.length;
+    html += '<section><h2>' + esc(c.name) + ' <small>' + words.length + ' mots</small></h2><div class="list">' +
+      '<div class="head"><div>Anglais</div><div>Français</div><div>Espagnol</div></div>';
+    words.forEach(w => {
+      html += '<div class="w">' +
+        '<div class="en' + (hidden.en ? " hidden-col" : "") + '"><button class="say" data-say="' + esc(w.en) + '" aria-label="Écouter ' + esc(w.en) + '">' + speaker + '</button><span class="cell-text">' + esc(w.en) + '</span></div>' +
+        '<div class="fr' + (hidden.fr ? " hidden-col" : "") + '"><span class="lang-tag">FR</span><span class="cell-text">' + esc(w.fr) + '</span></div>' +
+        '<div class="es' + (hidden.es ? " hidden-col" : "") + '"><span class="lang-tag">ES</span><span class="cell-text">' + esc(w.es) + '</span></div>' +
+        '</div>';
+    });
+    html += '</div></section>';
+  });
+  out.innerHTML = html || '<p class="empty">Aucun mot trouvé pour « ' + esc(q.value) + ' ».</p>';
+  count.textContent = shown === total ? total + " mots" : shown + " / " + total + " mots";
+}
+
+out.addEventListener("click", e => {
+  const b = e.target.closest(".say");
+  if (b) {
+    try {
+      const text = b.dataset.say.replace(/\(.*?\)/g, "").split("/")[0].replace("…", "").trim();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-GB"; u.rate = 0.85;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch (err) {}
+    return;
+  }
+  const t = e.target.closest(".hidden-col .cell-text");
+  if (t) t.classList.toggle("shown");
+});
+
+document.querySelectorAll(".toggle").forEach(btn => btn.addEventListener("click", () => {
+  const col = btn.dataset.col;
+  hidden[col] = !hidden[col];
+  btn.setAttribute("aria-pressed", String(hidden[col]));
+  render();
+}));
+q.addEventListener("input", render);
+sel.addEventListener("change", render);
+render();
+</script>
+</body>
+</html>
